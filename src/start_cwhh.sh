@@ -1,0 +1,11 @@
+python3 main.py \
+          --env_name cwhh_v1_add_walker_head_reward \
+          --morphologies cwhh \
+          --expID set_hopperf \
+          --exp_path ../results \
+          --config_path configs/3d.py \
+          --gpu 0 \
+          --custom_xml environments/3d_cwhh \
+          --actor_type set \
+          --critic_type set \
+          --seed 824

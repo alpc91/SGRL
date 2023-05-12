@@ -141,7 +141,9 @@ class Trainer(BaseTrainer):
 
 
     def train(self):
-
+        # self.post_step(self.tot_env_steps)  
+        # self.save_video_demo(0, wandb_save=True)
+        # return
         
         if self.tot_env_steps == 0:
             self.post_step(self.tot_env_steps)  

@@ -196,18 +196,6 @@ class Agent(BaseAgent):
             
         action = self.actor(obs).cpu().numpy()
         return action
-        # action_scaled, log_prob = \
-        #         itemgetter("action_scaled", "log_prob")(self.actor.sample(obs, deterministic))
-        # if obs.shape[0] == 1:
-        #     return {
-        #         "action": action_scaled.detach().cpu().numpy()[0], 
-        #         "log_prob": log_prob.detach().cpu().numpy()[0]
-        #     }
-        # else:
-        #     return {
-        #         "action": action_scaled.detach().cpu().numpy(), 
-        #         "log_prob": log_prob.detach().cpu().numpy()
-            # }
 
 
     def change_morphology(self, graph):

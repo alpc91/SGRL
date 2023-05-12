@@ -2,9 +2,6 @@ import torch
 import torch.nn.functional as F
 
 def multi_head_attention_forward(
-                                # query,                           # type: Tensor
-                                #  key,                             # type: Tensor
-                                #  value,                           # type: Tensor
                                  g_src,
                                  ng_src,
                                  gdir,
@@ -99,11 +96,8 @@ def multi_head_attention_forward(
     g_src2 = g_src2.contiguous().view(tgt_len, bsz, -1)
     g_src2 = linear_g2(F.relu(linear_g1(g_src2)))
     ng_src2 = torch.cat([g_src2, ng_src],dim=-1)
-    # print(ng_src2.shape)
     # self-attention
     # assert not use_separate_proj_weight and torch.equal(query, key) and torch.equal(key, value)
-    # q, k = F.linear(ng_src2, in_proj_weight, in_proj_bias).chunk(2, dim=-1)
-    # print(ng_src2.shape)
     q = q_proj(ng_src2)/F_norm 
     k = k_proj(ng_src2)/F_norm 
     v = v_proj(ng_src2)/F_norm 
@@ -120,43 +114,31 @@ def multi_head_attention_forward(
     k = k.contiguous().view(tgt_len, bsz * num_heads, head_dim*2).transpose(0, 1)
     v = v.contiguous().view(tgt_len, bsz * num_heads, head_dim*2).transpose(0, 1)
 
-    # ghead_dim = 32 // num_heads
     gdir = gdir.contiguous().view(tgt_len,bsz, 3,1,-1)
     gdir = gdir.repeat(1,1,1,2,1)
-    # print(gdir.shape,gdir[0,0,:,0,:],gdir[0,0,:,1,:])
     vg = vg.contiguous().view(tgt_len, bsz , 3,num_heads,-1)
     vg = torch.cat([vg,gdir],-1)
-    # print("vg",vg.shape)
     vg = vg.permute(2,1,3,0,4)
     vg = vg.contiguous().view(3*bsz*num_heads,tgt_len,head_dim*2)
-    # print("vg",vg.shape)
 
 
     src_len = k.size(1)
 
 
     attn_output_weights = torch.bmm(q, k.transpose(1, 2))
-    # print(attn_output_weights.shape)
     assert list(attn_output_weights.size()) == [bsz * (num_heads), tgt_len, src_len]
 
     if attn_mask is not None:
         assert attn_mask.shape == attn_output_weights.shape
-        # attn_mask = attn_mask.unsqueeze(0)
         attn_output_weights = attn_output_weights + attn_mask
 
 
     attn_output_weights = F.softmax(attn_output_weights, dim=-1)
-    # print('attw:', attn_output_weights.detach().cpu().numpy())
-    # attn_output_weights = F.dropout(attn_output_weights, p=dropout_p, training=training)
 
     attn_output = torch.bmm(attn_output_weights, v) #bszhead*node*node   bszhead*node*head_dim  = bszhead *node *head_dim
     assert list(attn_output.size()) == [bsz * (num_heads), tgt_len, 2*head_dim]
     attn_output = attn_output.transpose(0, 1).contiguous().view(tgt_len, bsz, 2*embed_dim)
-    # g_src = attn_output[:,:,:12]
-    # ng_src = attn_output[:,:,12:]
     ng_src = ng_out(attn_output)
-    # F.linear(attn_output, out_proj_weight, out_proj_bias)
-    # print(ng_src.shape)
 
 
     attn_output_weights = attn_output_weights.repeat(3,1,1)

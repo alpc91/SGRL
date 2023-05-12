@@ -39,7 +39,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         if dist_after < 1.0 and np.linalg.norm(self.target) > 1:
             rad = self.np_random.uniform(low=-np.pi, high=np.pi)
-            len = self.np_random.uniform(low=3, high=5)
+            len = self.np_random.uniform(low=10, high=20)
             self.target = pos_after+np.array([np.cos(rad),np.sin(rad)])*len
         return ob, reward, done, {"dist":dist_after}
     
@@ -160,7 +160,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             + self.np_random.randn(self.model.nv) * 0.1,
         )
         rad = self.np_random.uniform(low=-np.pi, high=np.pi)
-        len = self.np_random.uniform(low=3, high=5)
+        len = self.np_random.uniform(low=10, high=20)
         self.target = np.array([np.cos(rad),np.sin(rad)])*len
         return self._get_obs()
 

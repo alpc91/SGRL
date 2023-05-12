@@ -26,8 +26,11 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         pos_after = self.data.get_body_xpos("torso")[:2].copy()
         dist_after = np.linalg.norm(self.target-pos_after)
         torso_height = self.sim.data.qpos[2]
+        x,y,z,w = self.sim.data.qpos[3:7]
+        torso_ang = 2 * np.arctan2(np.sqrt(y*y+z*z), np.sqrt(x*x+w*w))
         alive_bonus = 1.0
         reward = (dist_before - dist_after) / self.dt
+        reward += np.dot(pos_after -  pos_before, heading) / self.dt
         reward += alive_bonus
         reward -= 1e-3 * np.square(a).sum()
         s = self.state_vector()
@@ -35,14 +38,13 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             np.isfinite(s).all()
             and (np.abs(s[3:]) < 100).all()
             and (torso_height > 0.45)
-            and (abs(pitch) < 1)
-            and (abs(roll) < 1)
+            and (abs(torso_ang) < 1)
         )
         ob = self._get_obs()
 
         if dist_after < 1.0 and np.linalg.norm(self.target) > 1:
             rad = self.np_random.uniform(low=-np.pi, high=np.pi)
-            len = self.np_random.uniform(low=3, high=5)
+            len = self.np_random.uniform(low=10, high=20)
             self.target = pos_after+np.array([np.cos(rad),np.sin(rad)])*len
         return ob, reward, done, {"dist":dist_after}
 
@@ -163,7 +165,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             + self.np_random.uniform(low=-0.005, high=0.005, size=self.model.nv),
         )
         rad = self.np_random.uniform(low=-np.pi, high=np.pi)
-        len = self.np_random.uniform(low=3, high=5)
+        len = self.np_random.uniform(low=10, high=20)
         self.target = np.array([np.cos(rad),np.sin(rad)])*len
         return self._get_obs()
 

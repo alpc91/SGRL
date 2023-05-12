@@ -22,13 +22,6 @@ class MlpCritic(nn.Module):
         args=None,
     ):
         super().__init__()
-        # self.num_limbs = 1
-        # self.x1 = [None] * self.num_limbs
-        # self.x2 = [None] * self.num_limbs
-        # self.input_state = [None] * self.num_limbs
-        # self.input_action = [None] * self.num_limbs
-        # self.msg_down = [None] * self.num_limbs
-        # self.msg_up = [None] * self.num_limbs
         self.msg_dim = msg_dim
         self.batch_size = batch_size
         self.max_children = max_children
@@ -43,53 +36,17 @@ class MlpCritic(nn.Module):
         self.critic2 = MLPNetwork((state_dim + action_dim)*len(args.graphs[args.envs_train_names[-1]]), 1, **args.agent['q_network']).to(util.device)
 
     def forward(self, state, action):
-        # self.clear_buffer()
-
-        # assert (
-        #     state.shape[1] == self.state_dim * self.num_limbs
-        # ), "state.shape[1] expects {} but got {} with num_limbs being {} and state_dim being {}".format(
-        #     self.state_dim * self.num_limbs,
-        #     state.shape[1],
-        #     self.num_limbs,
-        #     self.state_dim,
-        # )
-
-        # self.input_state = state.reshape(state.shape[0], self.num_limbs, -1).permute(
-        #     1, 0, 2
-        # )
-        # self.input_action = action.reshape(action.shape[0], self.num_limbs, -1).permute(
-        #     1, 0, 2
-        # )
-        # print(state.shape,action.shape)
         inpt = torch.cat([state, action], dim=-1)
 
         self.x1 = self.critic1(inpt)
         self.x2 = self.critic2(inpt)
-        # print("x1",self.x1.shape)
         return self.x1, self.x2
 
     def Q1(self, state, action):
-        # self.clear_buffer()
-        # self.input_state = state.reshape(state.shape[0], self.num_limbs, -1).permute(
-        #     1, 0, 2
-        # )
-        # self.input_action = action.reshape(action.shape[0], self.num_limbs, -1).permute(
-        #     1, 0, 2
-        # )
         inpt = torch.cat([state, action], dim=-1)
         self.x1 = self.critic1(inpt)
         return self.x1
 
-    # def clear_buffer(self):
-    #     self.x1 = [None] * self.num_limbs
-    #     self.x2 = [None] * self.num_limbs
-    #     self.input_state = [None] * self.num_limbs
-    #     self.input_action = [None] * self.num_limbs
-    #     self.msg_down = [None] * self.num_limbs
-    #     self.msg_up = [None] * self.num_limbs
-    #     self.zeroFold_td = None
-    #     self.zeroFold_bu = None
-    #     self.fold = None
 
     def change_morphology(self, graph):
         self.graph = graph

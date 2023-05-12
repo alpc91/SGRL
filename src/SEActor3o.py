@@ -1,6 +1,7 @@
 import math
 import copy
 import torch
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 import torch.nn as nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer, MultiheadAttention
 from ModularActor import ActorGraphPolicy
@@ -75,6 +76,7 @@ class MyTransformerEncoderLayer(TransformerEncoderLayer):
         self.linear_g1 = torch.nn.Linear(32*32,dim_feedforward)
         self.linear_g2 = torch.nn.Linear(dim_feedforward,d_model)
         self.linear1 = torch.nn.Linear(d_model+d_model,dim_feedforward)
+        # self.linear2 = torch.nn.Linear(dim_feedforward, d_model)
         self.linear3 = torch.nn.Linear(d_model+d_model,dim_feedforward)
         self.linear4 = torch.nn.Linear(dim_feedforward,32*32)
         self.linear5 = torch.nn.Linear(32,d_model,bias=False)
@@ -217,11 +219,16 @@ class TransformerModel(nn.Module):
         self.linear2_ng = torch.nn.Linear(ninp_att,ninp_att)
 
         ninp_dec = ninp_att+ninp_att
+        # print(ninp_dec, output_size)
         self.output_size = output_size
         if self.output_size == 1:
             self.decoder_ng = nn.Linear(ninp_dec, output_size)
         else:
-            self.decoder_g = torch.nn.Linear(32,1,bias=False) 
+        #     output_size = output_size // 2
+        #     self.output_g = (self.g_num-1)*3
+        #     self.output_ng = output_size - self.output_g
+        #     self.decoder_ng = nn.Linear(ninp_dec, self.output_ng*2)
+            self.decoder_g = torch.nn.Linear(32,self.output_size,bias=False) # 4: no g
             self.linear1_m = torch.nn.Linear(ninp_dec,ninp_dec)
             self.linear2_m = torch.nn.Linear(ninp_dec,32*32)
             self.g_proj = nn.Linear(ninp_att+self.g_num, 32-2,bias=False)
@@ -235,6 +242,8 @@ class TransformerModel(nn.Module):
         self.g_encoder.weight.data.uniform_(-initrange, initrange)
 
     def forward(self, src, graph=None):
+        # theta = np.pi#math.pi*rad
+
         tgt_len, bsz, embed_dim = src.size()
         g_src0 = src[:,:,:self.g_num*3]
         g_src0 = g_src0.contiguous().view(tgt_len,bsz, -1,3).transpose(-2, -1)
@@ -242,8 +251,25 @@ class TransformerModel(nn.Module):
 
         g_src = src[:,:,:self.g_num*3]
         g_src = g_src.contiguous().view(tgt_len,bsz, -1,3).transpose(-2, -1)
+
+        # print(g_src.shape,gdir.shape,gdir)
+        
+        # g_src = g_src.contiguous().view(tgt_len*bsz, 3,-1)
+        # g_src0 = g_src0.contiguous().view(tgt_len*bsz, 3,-1)
+        # O = torch.tensor([[math.cos(theta), -math.sin(theta), 0],
+        #     [math.sin(theta), math.cos(theta), 0],
+        #     [0, 0, 1]]).unsqueeze(0).to(g_src.device)
+        # O = O.repeat(g_src.shape[0],1,1)
+        # # print(O.shape)
+        # g_src = torch.bmm(O, g_src)
+        # g_src0 = torch.bmm(O, g_src0)
+        # g_src = g_src.contiguous().view(tgt_len,bsz, 3,-1)
+        # g_src0 = g_src0.contiguous().view(tgt_len,bsz, 3,-1)
+        # print("input g_src0",g_src0.transpose(-2, -1))
+
         gdir = g_src[:,:,:,1:3]
         gdir = gdir.contiguous().view(tgt_len*bsz, 3,-1)
+
         g_src = self.g_encoder(g_src) * math.sqrt(self.ninp)
         ng_src = src[:,:,self.g_num*3:]
         ng_src = self.encoder(ng_src) * math.sqrt(self.ninp)
@@ -266,6 +292,7 @@ class TransformerModel(nn.Module):
         output_ng = torch.cat([output_gg, output_ng],dim=-1)  
         if self.output_size == 1:
             output = self.decoder_ng(output_ng)/F_norm
+            # print("Before: value",output)
         else:
             mat = self.linear2_m(F.relu(self.linear1_m(output_ng)))/ F_norm
             mat = mat.contiguous().view(tgt_len*bsz, 32,32)  #node*C*C
@@ -277,12 +304,90 @@ class TransformerModel(nn.Module):
             g_src = self.decoder_g(output_g) #tgt*bz*3*C
             g_src = g_src.contiguous().view(tgt_len*bsz, 3,-1)
             g_src0 = g_src0[:,:,:,5:8].contiguous().view(tgt_len*bsz, 3,-1)
+            # print("output",g_src.transpose(-2, -1),g_src0.transpose(-2, -1))
 
-            output0 = torch.bmm(g_src0[:,:,0:1].transpose(-2, -1), g_src).contiguous().view(tgt_len*bsz, -1)
-            output1 = torch.bmm(g_src0[:,:,1:2].transpose(-2, -1), g_src).contiguous().view(tgt_len*bsz, -1)
-            output2 = torch.bmm(g_src0[:,:,2:].transpose(-2, -1), g_src).contiguous().view(tgt_len*bsz, -1)
+            output0 = torch.bmm(g_src0[:,:,0:1].transpose(-2, -1), g_src[:,:,0:1]).contiguous().view(tgt_len*bsz, -1)
+            output1 = torch.bmm(g_src0[:,:,1:2].transpose(-2, -1), g_src[:,:,1:2]).contiguous().view(tgt_len*bsz, -1)
+            output2 = torch.bmm(g_src0[:,:,2:].transpose(-2, -1), g_src[:,:,2:]).contiguous().view(tgt_len*bsz, -1)
 
+            # print("Before: g_src",g_src)
             output = torch.cat([output0,output1,output2],-1).contiguous().view(tgt_len,bsz,-1)
+            # print("output",output)
+
+
+
+        # #set test
+        # rad = np.random.rand()
+        # theta = math.pi*rad
+        # O = torch.tensor([[math.cos(theta), -math.sin(theta), 0],
+        #             [math.sin(theta), math.cos(theta), 0],
+        #             [0, 0, 1]]).unsqueeze(0).to(g_src.device)
+
+        # g_src0 = src[:,:,:self.g_num*3]
+        # g_src0 = g_src0.contiguous().view(tgt_len*bsz, -1,3).transpose(-2, -1)
+        # ng_src0 = src[:,:,self.g_num*3:]
+
+        # g_src = src[:,:,:self.g_num*3]
+        # g_src = g_src.contiguous().view(tgt_len*bsz, -1,3).transpose(-2, -1)
+
+        # O = O.repeat(g_src.shape[0],1,1)
+        # # print(O.shape)
+        # g_src = torch.bmm(O, g_src)
+        # g_src0 = torch.bmm(O, g_src0)
+        # g_src = g_src.contiguous().view(tgt_len,bsz, 3,-1)
+        # g_src0 = g_src0.contiguous().view(tgt_len,bsz, 3,-1)
+
+        # g_src = self.g_encoder(g_src) * math.sqrt(self.ninp)
+        # ng_src = src[:,:,self.g_num*3:]
+        # ng_src = self.encoder(ng_src) * math.sqrt(self.ninp)
+        # pos = self.pos_encoder(graph['traversals']) # (N, d)        
+        # rel = graph['relation']   # (N, N, d_rel)
+        # g_src, ng_src = self.transformer_encoder(g_src, ng_src, gdir, pos, rel) 
+        # output_ng = torch.cat([ng_src0, ng_src],dim=-1)  
+        # output_g = torch.cat([g_src0, g_src],dim=-1)
+
+        # output_gg = output_g.contiguous().view(tgt_len*bsz, 3,-1)
+        # output_gg = self.gg_proj(output_gg)
+        # output_gg = torch.cat([output_gg,gdir],-1)
+        # output_gg = torch.bmm(output_gg.transpose(-2, -1), output_gg)
+        # F_norm = torch.norm(output_gg,dim=(-2,-1),keepdim=True)+1.0
+        # F_norm = F_norm.contiguous().view(tgt_len,bsz,-1)
+        # output_gg = output_gg.contiguous().view(tgt_len, bsz, -1)
+        # output_gg = self.linear2_g(F.relu(self.linear1_g(output_gg)))
+
+        # output_ng = self.linear2_ng(F.relu(self.linear1_ng(output_ng)))
+        # output_ng = torch.cat([output_gg, output_ng],dim=-1)  
+        
+        # if self.output_size == 1:
+        #     output = self.decoder_ng(output_ng)/F_norm
+        #     print("After: value",output)
+        # else:
+        #     mat = self.linear2_m(F.relu(self.linear1_m(output_ng)))/ F_norm
+        #     mat = mat.contiguous().view(tgt_len*bsz, 32,32)  #node*C*C
+        #     output_g = output_g.contiguous().view(tgt_len*bsz, 3, -1)  
+        #     output_g = self.g_proj(output_g)
+        #     output_g = torch.cat([output_g,gdir],-1)
+        #     output_g = torch.bmm(output_g, mat)  # node*3*C *  node*C*C        node*3*C
+        #     output_g = output_g.contiguous().view(tgt_len,bsz, 3,-1)
+        #     g_src = self.decoder_g(output_g) #tgt*bz*3*C
+        #     g_src = g_src.contiguous().view(tgt_len*bsz, 3,-1)
+        #     g_src0 = g_src0[:,:,:,5:8].contiguous().view(tgt_len*bsz, 3,-1)
+
+        #     output0 = torch.bmm(g_src0[:,:,0:1].transpose(-2, -1), g_src[:,:,0:1]).contiguous().view(tgt_len*bsz, -1)
+        #     output1 = torch.bmm(g_src0[:,:,1:2].transpose(-2, -1), g_src[:,:,1:2]).contiguous().view(tgt_len*bsz, -1)
+        #     output2 = torch.bmm(g_src0[:,:,2:].transpose(-2, -1), g_src[:,:,2:]).contiguous().view(tgt_len*bsz, -1)
+
+        #     print("After: g_src",g_src)
+        #     output = torch.cat([output0,output1,output2],-1).contiguous().view(tgt_len,bsz,-1)
+        #     print("output",output)    
+
+        #     theta = -math.pi*rad
+        #     O = torch.tensor([[math.cos(theta), -math.sin(theta), 0],
+        #             [math.sin(theta), math.cos(theta), 0],
+        #             [0, 0, 1]]).unsqueeze(0).to(g_src.device)
+        #     O = O.repeat(g_src.shape[0],1,1)
+        #     g_src = torch.bmm(O, g_src)
+        #     print("Rotate: g_src",g_src)
 
         return output
 
@@ -330,9 +435,13 @@ class SEPolicy(ActorGraphPolicy):
             num_positions=len(args.traversal_types),
             rel_size=args.rel_size,
         ).to(util.device)
+        # print(self.actor)
 
     def forward(self, state, mode="train"):
         self.clear_buffer()
+        # if mode == "inference":
+        #     temp = self.batch_size
+        #     self.batch_size = 1
 
         self.input_state = state.reshape(state.shape[0], self.num_limbs, -1).permute(
             1, 0, 2
@@ -344,7 +453,31 @@ class SEPolicy(ActorGraphPolicy):
         self.action = self.action.permute(1, 0, 2)
         self.action = self.action.contiguous().view(self.action.shape[0], -1)
 
+        # if mode == "inference":
+        #     self.batch_size = temp
         return self.action
+
+
+    # def forward_attn(self, state, mode="train"):
+    #     self.clear_buffer()
+    #     # if mode == "inference":
+    #     #     temp = self.batch_size
+    #     #     self.batch_size = 1
+
+    #     self.input_state = state.reshape(state.shape[0], self.num_limbs, -1).permute(
+    #         1, 0, 2
+    #     )
+    #     self.action, attn_weights_rel_pos = self.actor(self.input_state, self.graph)
+        
+    #     self.action = self.max_action * torch.tanh(self.action)
+
+    #     # because of the permutation of the states, we need to unpermute the actions now so that the actions are (batch,actions)
+    #     self.action = self.action.permute(1, 0, 2)
+
+    #     # if mode == "inference":
+    #     #     self.batch_size = temp
+
+    #     return torch.squeeze(self.action), attn_weights_rel_pos
 
     def change_morphology(self, graph):
         self.graph = graph

@@ -144,22 +144,12 @@ def multi_head_attention_forward(query,                           # type: Tensor
 
     attn_output_weights = torch.bmm(q, k.transpose(1, 2))
     assert list(attn_output_weights.size()) == [bsz * num_heads, tgt_len, src_len]
-    # print('score:', attn_output_weights[:num_heads, ...].detach().cpu().numpy())
-    # if abs(attn_output_weights.detach().cpu().numpy().mean()) > 8 or attn_output_weights.detach().cpu().numpy().std() > 16:
-    #     if attn_mask is not None:
-    #         print('### 1st layer ###')
-    #     print('Q mean',q.detach().cpu().numpy().mean(), 'std',q.detach().cpu().numpy().std())
-    #     print('K mean',k.detach().cpu().numpy().mean(), 'std',k.detach().cpu().numpy().std())
-    #     print('score: mean', attn_output_weights.detach().cpu().numpy().mean(),
-    #             'std', attn_output_weights.detach().cpu().numpy().std())
+
     if attn_mask is not None:
         assert attn_mask.shape == attn_output_weights.shape
         # attn_mask = attn_mask.unsqueeze(0)
         attn_output_weights = attn_output_weights + attn_mask
-        # if abs(attn_output_weights.detach().cpu().numpy().mean()) > 8 or attn_output_weights.detach().cpu().numpy().std() > 16:
-        #     print('final score: mean', attn_output_weights.detach().cpu().numpy().mean(),'std', attn_output_weights.detach().cpu().numpy().std())
-        #     print('attn mask mean', attn_mask.detach().cpu().numpy().mean(), 'std', attn_mask.detach().cpu().numpy().std())
-    
+
     if key_padding_mask is not None:
         attn_output_weights = attn_output_weights.view(bsz, num_heads, tgt_len, src_len)
         attn_output_weights = attn_output_weights.masked_fill(

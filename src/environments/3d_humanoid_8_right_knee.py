@@ -32,7 +32,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         reward += alive_bonus
         reward -= 1e-3 * np.square(a).sum()
         # print(torso_height,torso_ang)
-        done = not (torso_height > 1.0-0.165375 and torso_height < 2.0-0.165375 and pitch > -1.0 and pitch < 1.0 and roll > -1.0 and roll < 1.0)
+        done = not (torso_height > 1.0-0.165375 and torso_height < 2.0-0.165375 and abs(pitch) < 1.0 and abs(roll) < 1.0)
         ob = self._get_obs()
 
         if dist_after < 1.0 and np.linalg.norm(self.target) > 1:

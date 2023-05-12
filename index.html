@@ -231,7 +231,7 @@
 
       <center><h1>SGRL</h1></center>
       <div style="width:800px; margin:0 auto; text-align=right">
-        In spite of the fruitful progress by modular RL, in this work, we identify several critical setups that have been over-simplified in existing benchmarks, giving rise to a limited state/action space such that the obtained policy is unable to explore the entire 3D space. In particular, the agents are assigned a fixed starting point and restricted to move towards a single direction along the $x$-axis, leading to 2D motions only. Nevertheless, in a more realistic setup as depicted in Fig.~\ref{fig:teaser}, the agents would be expected to have full Degree-of-Freedoms (DoFs) to turn and move in arbitrary directions starting from arbitrary configurations. To address the concern, we extend the existing environments to a set of new benchmarks in 3D space, which meanwhile introduces significant challenges to modular RL due to the massive enlargement of the state-action space for policy optimization. 
+        In spite of the fruitful progress by modular RL, in this work, we identify several critical setups that have been over-simplified in existing benchmarks, giving rise to a limited state/action space such that the obtained policy is unable to explore the entire 3D space. In particular, the agents are assigned a fixed starting point and restricted to move towards a single direction along the x-axis, leading to 2D motions only. Nevertheless, in a more realistic setup as depicted below, the agents would be expected to have full Degree-of-Freedoms (DoFs) to turn and move in arbitrary directions starting from arbitrary configurations. To address the concern, we extend the existing environments to a set of new benchmarks in 3D space, which meanwhile introduces significant challenges to modular RL due to the massive enlargement of the state-action space for policy optimization. 
       </div>
       <table align="center" width="800px"><tbody><tr><td width="800px">
       <center><a href="resources/teaser.pdf"><img src = "resources/teaser.pdf" width="600px" ></img></a><br></center>
@@ -241,12 +241,12 @@
 
 
       <center><h1>SubEquivariant Transformer (SET)</h1></center>
-      <div style="width:1200px; margin:0 auto; text-align=right">
+      <div style="width:1000px; margin:0 auto; text-align=right">
         Optimizing the policy in our new setup is prohibitively difficult, and existing modular RL frameworks like SMP, SWAT are observed to be susceptible to getting stuck in the local minima and exhibited poor generalization in our experiments. To this end, we propose to inject geometric symmetry into the design of the policy network to compact the space redundancy in a lossless way. In particular, we restrict the policy network to be subequivariant in two senses: 1. the output action will rotate in the same way as the input state of the agent; 2. the equivariance is partially relaxed to take into account the effect of gravity in the environment. We design SubEquivariant Transformer (SET) with a novel architecture that satisfies the above constraints while also permitting expressive message propagation through self-attention. Upon SET, the action and Q-function could be obtained with desirable symmetries guaranteed. We term our entire task setup and methodology as Subequivariant Graph Reinforcement Learning in 3D Environments (3D-SGRL).
 
       </div>
-      <table align="center" width="1200px"><tbody><tr><td width="1200px">
-      <center><a href="resources/main.pdf"><img src = "resources/main.pdf" width="1200px"></img></a><br></center>
+      <table align="center" width="1200px"><tbody><tr><td width="1000px">
+      <center><a href="resources/main.pdf"><img src = "resources/main.pdf" width="1000px"></img></a><br></center>
       </td></tr></tbody></table>
       <br/><hr>
 

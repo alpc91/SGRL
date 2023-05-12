@@ -148,4 +148,4 @@ For the results reported in the paper, the following agents are in the held-out 
 All other agents in the corresponding experiments are used for training.
 
 ## Acknowledgement
-The RL code is based on this [open-source implementation](https://github.com/x35f/unstable_baselines) and the modular part is built on top of [SMP (Huang et al., ICML 2020)](https://github.com/huangwl18/modular-rl), [Amorpheus (Kurin et al., ICLR 2021)](https://github.com/yobibyte/amorpheus) and [SWAT (Hong et al., ICLR 2022)](https://github.com/sunghoonhong/SWAT) repository.
+The RL code is based on this [open-source implementation](https://github.com/x35f/unstable_baselines) and the modular implementation is built on top of [SMP (Huang et al., ICML 2020)](https://github.com/huangwl18/modular-rl), [Amorpheus (Kurin et al., ICLR 2021)](https://github.com/yobibyte/amorpheus) and [SWAT (Hong et al., ICLR 2022)](https://github.com/sunghoonhong/SWAT) repository.

@@ -1,5 +1,5 @@
 ## Subequivariant Graph Reinforcement Learning in 3D Environment ##
-### ICML 2023
+### ICML 2023 Oral
 #### [[Project Page]](https://alpc91.github.io/SGRL/) 
 
 [Runfa Chen](https://scholar.google.com/citations?user=WaeyhikAAAAJ&hl=en)<sup>1</sup>, [Jiaqi Han](https://scholar.google.com/citations?user=AKppgMAAAAAJ&hl=en)<sup>1</sup>, [Fuchun Sun](https://scholar.google.com/citations?user=DbviELoAAAAJ&hl=en)<sup>1 2</sup>, [Wenbing Huang](https://gsai.ruc.edu.cn/addons/teacher/index/info.html?user_id=31&ruccode=ADIIMVRnBzFXMFdnVTAIOw%3D%3D&ln=en)<sup>3 4</sup>

@@ -1,11 +1,11 @@
 python3 main.py \
           --env_name hopper \
           --morphologies hopper \
-          --expID smp_forward \
+          --expID set \
           --exp_path ../results \
           --config_path configs/3d.py \
-          --gpu 2 \
+          --gpu 0 \
           --custom_xml environments/3d_hoppers/ \
-          --actor_type smp \
-          --critic_type smp \
-          --seed 68
+          --actor_type set \
+          --critic_type set \
+          --seed 30

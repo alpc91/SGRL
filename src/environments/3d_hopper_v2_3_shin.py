@@ -30,7 +30,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         torso_ang = 2 * np.arctan2(np.sqrt(y*y+z*z), np.sqrt(x*x+w*w))
         alive_bonus = 1.0
         reward = (dist_before - dist_after) / self.dt
-        reward += np.dot(pos_after -  pos_before, heading) / self.dt
+        # reward += np.dot(pos_after -  pos_before, heading) / self.dt
         reward += alive_bonus
         reward -= 1e-3 * np.square(a).sum()
         s = self.state_vector()

@@ -1,5 +1,6 @@
 meta_rl/oyster
 meta_rl/pytorch-maml
+*/sh/
 */results/
 */logs/*
 */logs

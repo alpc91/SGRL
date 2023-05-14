@@ -13,6 +13,12 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         utils.EzPickle.__init__(self)
 
     def step(self, a):
+        torso_quat = self.sim.data.qpos[3:7]
+        torso_rotmat = quat2mat(torso_quat)
+        heading = np.arctan2(torso_rotmat[1,0], torso_rotmat[0,0])
+        pitch = np.arctan2(-torso_rotmat[2,0], np.sqrt(torso_rotmat[2,1]**2 + torso_rotmat[2,2]**2))
+        roll = np.arctan2(torso_rotmat[2,1], torso_rotmat[2,2])
+        heading  = [np.cos(heading), np.sin(heading)]
         pos_before = self.data.get_body_xpos("torso")[:2].copy()
         dist_before = np.linalg.norm(self.target-pos_before)
         self.do_simulation(a, self.frame_skip)
@@ -23,6 +29,7 @@ class ModularEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         torso_ang = 2 * np.arctan2(np.sqrt(y*y+z*z), np.sqrt(x*x+w*w))
         alive_bonus = 1.0
         reward = (dist_before - dist_after) / self.dt
+        reward += np.dot(pos_after -  pos_before, heading) / self.dt
         reward += alive_bonus
         reward -= 1e-3 * np.square(a).sum()
         done = False

@@ -225,13 +225,13 @@
       <br>
 
       <div style="width:1024px; margin:0 auto; text-align=right;">
-        Learning a shared policy that guides the locomotion of different agents is of core interest in Reinforcement Learning (RL), which leads to the study of modular RL. However, existing modular RL benchmarks are highly restrictive in the choice of starting point and target point, constraining the movement of the agents within 2D space. In this work, we propose a novel setup for modular RL, dubbed Subequivariant Graph RL in 3D environments (3D-SGRL). Specifically, we first introduce a new set of more practical yet challenging benchmarks in 3D space that allows the agent to have full Degree-of-Freedoms to explore in arbitrary directions starting from arbitrary configurations. Moreover, to optimize the policy over the enlarged state-action space, we propose to inject geometric symmetry, i.e., subequivariance, into the modeling of the policy and Q-function such that the policy can generalize to all directions, improving exploration efficiency. This goal is achieved by a novel SubEquivariant Transformer (SET) that permits expressive message exchange. Finally, we evaluate the proposed method on the proposed benchmarks, where our method consistently and significantly outperforms existing approaches on single-task, multi-task and zero-shot generalization scenarios. Extensive ablations are also conducted to verify our design.
+        Learning a shared policy that guides the locomotion of different agents is of core interest in Reinforcement Learning (RL), which leads to the study of morphology-agnostic RL. However, existing benchmarks are highly restrictive in the choice of starting point and target point, constraining the movement of the agents within 2D space. In this work, we propose a novel setup for morphology-agnostic RL, dubbed Subequivariant Graph RL in 3D environments (3D-SGRL). Specifically, we first introduce a new set of more practical yet challenging benchmarks in 3D space that allows the agent to have full Degree-of-Freedoms to explore in arbitrary directions starting from arbitrary configurations. Moreover, to optimize the policy over the enlarged state-action space, we propose to inject geometric symmetry, i.e., subequivariance, into the modeling of the policy and Q-function such that the policy can generalize to all directions, improving exploration efficiency. This goal is achieved by a novel SubEquivariant Transformer (SET) that permits expressive message exchange. Finally, we evaluate the proposed method on the proposed benchmarks, where our method consistently and significantly outperforms existing approaches on single-task, multi-task, and zero-shot generalization scenarios. Extensive ablations are also conducted to verify our design.
       </div>
       <br><hr>
 
       <center><h1>SGRL</h1></center>
       <div style="width:1024px; margin:0 auto; text-align=right">
-        In spite of the fruitful progress by modular RL, in this work, we identify several critical setups that have been over-simplified in existing benchmarks, giving rise to a limited state/action space such that the obtained policy is unable to explore the entire 3D space. In particular, the agents are assigned a fixed starting point and restricted to move towards a single direction along the x-axis, leading to 2D motions only. Nevertheless, in a more realistic setup as depicted below, the agents would be expected to have full Degree-of-Freedoms (DoFs) to turn and move in arbitrary directions starting from arbitrary configurations. To address the concern, we extend the existing environments to a set of new benchmarks in 3D space, which meanwhile introduces significant challenges to modular RL due to the massive enlargement of the state-action space for policy optimization. 
+        In spite of the fruitful progress by morphology-agnostic RL, in this work, we identify several critical setups that have been over-simplified in existing benchmarks, giving rise to a limited state/action space such that the obtained policy is unable to explore the entire 3D space. In particular, the agents are assigned a fixed starting point and restricted to moving towards a single direction along the x-axis, leading to 2D motions only. Nevertheless, in a more realistic setup as depicted in Figure 1, the agents would be expected to have full Degree-of-Freedoms (DoFs) to turn and move in arbitrary directions starting from arbitrary configurations. To address the concern, we extend the existing environments to a set of new benchmarks in 3D space, which meanwhile introduces significant challenges to morphology-agnostic RL due to the massive enlargement of the state-action space for policy optimization.
       </div>
     
 
@@ -244,8 +244,7 @@
 
       <center><h1>SubEquivariant Transformer (SET)</h1></center>
       <div style="width:1024px; margin:0 auto; text-align=right">
-        Optimizing the policy in our new setup is prohibitively difficult, and existing modular RL frameworks like SMP, SWAT are observed to be susceptible to getting stuck in the local minima and exhibited poor generalization in our experiments. To this end, we propose to inject geometric symmetry into the design of the policy network to compact the space redundancy in a lossless way. In particular, we restrict the policy network to be subequivariant in two senses: 1. the output action will rotate in the same way as the input state of the agent; 2. the equivariance is partially relaxed to take into account the effect of gravity in the environment. We design SubEquivariant Transformer (SET) with a novel architecture that satisfies the above constraints while also permitting expressive message propagation through self-attention. Upon SET, the action and Q-function could be obtained with desirable symmetries guaranteed. We term our entire task setup and methodology as Subequivariant Graph Reinforcement Learning in 3D Environments (3D-SGRL).
-
+        Optimizing the policy in our new setup is prohibitively dif- ficult, and existing morphology-agnostic RL frameworks like (Huang et al., 2020; Hong et al., 2021) are observed to be susceptible to getting stuck in the local minima and exhibited poor generalization in our experiments. To this end, we propose to inject geometric symmetry (Cohen & Welling, 2016; Cohen & Welling, 2017; Worrall et al., 2017; van der Pol et al., 2020) into the design of the policy network to compact the space redundancy in a lossless way (van der Pol et al., 2020). In particular, we restrict the policy network to be subequivariant in two senses (Han et al., 2022a): 1. the output action will rotate in the same way as the input state of the agent; 2. the equivariance is partially relaxed to take into account the effect of gravity in the environment. We design SubEquivariant Transformer (SET) with a novel architecture that satisfies the above constraints while also permitting ex- pressive message propagation through self-attention. Upon SET, the action and Q-function could be obtained with desir- able symmetries guaranteed. We term our entire task setup and methodology as Subequivariant Graph Reinforcement Learning in 3D Environments (3D-SGRL).
       </div>
       <table align="center" width="1024px"><tbody><tr><td width="1024px">
       <center><a href="resources/main.pdf"><img src = "resources/main.pdf" width="1024px"></img></a><br></center>
@@ -294,11 +293,11 @@
     <div class="paper" id="sgrl2023_bib">
 <pre xml:space="preserve">
 @inproceedings{chen2023sgrl,
-    Author = {Runfa, Chen and Jiaqi, Han
-    and Fuchun, Sun and Wenbing, Huang},
-    Title = {Subequivariant Graph Reinforcement Learning in 3D Environment},
-    Booktitle = {ICML},
-    Year = {2023}
+    title = {Subequivariant Graph Reinforcement Learning in 3D Environment},
+    author = {Chen, Runfa and Han, Jiaqi and Sun, Fuchun and Huang, Wenbing},
+    booktitle={International Conference on Machine Learning},
+    year={2023},
+    organization={PMLR}
     }
 </pre>
                 </div>
@@ -309,8 +308,8 @@
 
       <center><h1>Acknowledgements</h1></center>
       <div style="width:1024px; margin:0 auto; text-align=right">
-        This work is jointly funded by "New Generation Artificial Intelligence" Key Field Research and Development Plan of Guangdong Province (2021B0101410002), the National Science and Technology Major Project of the Ministry of Science and Technology of China (No.2018AAA0102900), the Sino-German Collaborative Research Project Crossmodal Learning (NSFC 62061136001/DFG TRR169), THU-Bosch JCML center, and the National Natural Science Foundation of China under Grant U22A2057. 
-        <br/>We sincerely thank the reviewers for their insightful comments and suggestions that significantly improved our paper's quality. Our heartfelt thanks go to Yu Luo, Tianying Ji, Chengliang Zhong, and Chao Yang for fruitful discussions and support. Finally, Runfa Chen expresses gratitude to his wife, Xia Zhong, for her unwavering love and support.
+        Thisworkisjointlyfundedby“NewGenerationArtificial Intelligence” Key Field Research and Development Plan of Guangdong Province (2021B0101410002), the National Science and Technology Major Project of the Ministry of Science and Technology of China (No.2018AAA0102900), the Sino-German Collaborative Research Project Cross- modal Learning (NSFC 62061136001/DFG TRR169), THU-Bosch JCML Center, the National Natural Sci- ence Foundation of China under Grant U22A2057, the National Natural Science Foundation of China (No.62006137), Beijing Outstanding Young Scientist Pro- gram (No.BJJWZYJH012019100020098), and Scientific Research Fund Project of Renmin University of China (Start- up Fund Project for New Teachers). 
+        <br/>We sincerely thank the reviewers for their comments that significantly improved our paper’s quality. Our heartfelt thanks go to Yu Luo, Tianying Ji, Chengliang Zhong, and Chao Yang for fruitful discus- sions. Finally, Runfa Chen expresses gratitude to his fiance ́e, Xia Zhong, for her unwavering love and support.
       </div><br/>
 
       </table>

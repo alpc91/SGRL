@@ -10,13 +10,13 @@ This is a PyTorch-based implementation of our [Subequivariant Graph Reinforcemen
 
 If you find this work useful in your research, please cite using the following BibTeX:
 
-    @inproceedings{chen2023sgrl,
-      Author = {Runfa, Chen and Jiaqi, Han
-      and Fuchun, Sun and Wenbing, Huang},
-      Title = {Subequivariant Graph Reinforcement Learning in 3D Environment},
-      Booktitle = {ICML},
-      Year = {2023}
-      }
+@inproceedings{chen2023sgrl,
+    title = {Subequivariant Graph Reinforcement Learning in 3D Environment},
+    author = {Chen, Runfa and Han, Jiaqi and Sun, Fuchun and Huang, Wenbing},
+    booktitle={International Conference on Machine Learning},
+    year={2023},
+    organization={PMLR}
+    }
 
 ## Setup
 ### Requirements

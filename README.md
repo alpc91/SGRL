@@ -6,7 +6,7 @@
 
 <sup>1</sup>Department of Computer Science and Technology, Institute for AI, BNRist Center, Tsinghua University, <sup>2</sup>THU-Bosch JCML Center, <sup>3</sup>Gaoling School of Artificial Intelligence, Renmin University of China, <sup>4</sup>Beijing Key Laboratory of Big Data Management and Analysis Methods<br/>
 
-This is a PyTorch-based implementation of our [Subequivariant Graph Reinforcement Learning](https://alpc91.github.io/SGRL/). In this work, we introduce a new modular RL benchmark that extends the widely adopted 2D-Planar setting to 3D-SGRL, permitting significantly larger exploring space of the agents with arbitrary initial location and target direction. To learn a policy in this massive search space, we design SET, a novel model that preserves geometric symmetry by construction. Experimental results strongly support the necessity of encoding symmetry into the policy network and its wide applicability towards learning to navigate in various 3D environments. 
+This is a PyTorch-based implementation of our [Subequivariant Graph Reinforcement Learning](https://alpc91.github.io/SGRL/). In this work, we introduce a new morphology-agnostic RL benchmark that extends the widely adopted 2D-Planar setting to 3D-SGRL, permitting significantly larger exploring space of the agents with arbitrary initial location and target direction. To learn a policy in this massive search space, we design SET, a novel model that preserves geometric symmetry by construction. Experimental results strongly support the necessity of encoding symmetry into the policy network and its wide applicability towards learning to navigate in various 3D environments. 
 
 If you find this work useful in your research, please cite using the following BibTeX:
 
@@ -42,7 +42,7 @@ If you find this work useful in your research, please cite using the following B
 | ``--exp_path <STRING>``  | The directory path where the experimental results are saved  |
 | ``--config_path <STRING>``  | The path to the configuration file  |
 | ``--gpu <INT>``  | The GPU device ID (e.g., 0, 1, 2, 3, etc) |
-| ``--custom_xml <PATH>``  | Path to custom `xml` file for training the modular policy.<br> When ``<PATH>`` is a file, train with that `xml` morphology only. <br> When ``<PATH>`` is a directory, train on all `xml` morphologies found in the directory |
+| ``--custom_xml <PATH>``  | Path to custom `xml` file for training the morphology-agnostic policy.<br> When ``<PATH>`` is a file, train with that `xml` morphology only. <br> When ``<PATH>`` is a directory, train on all `xml` morphologies found in the directory |
 | ``--actor_type <STRING>``  | Type of the actor to use (e.g., smp, swat, set, mlp, etc) |
 | ``--critic_type <STRING>``  | Type of the critic to use (e.g., smp, swat, set, mlp, etc) |
 | ``--seed <INT>``  | (Optional) Seed for Gym, PyTorch and Numpy  |
@@ -148,4 +148,4 @@ For the results reported in the paper, the following agents are in the held-out 
 All other agents in the corresponding experiments are used for training.
 
 ## Acknowledgement
-The RL code is based on this [open-source implementation](https://github.com/x35f/unstable_baselines) and the modular implementation is built on top of [SMP (Huang et al., ICML 2020)](https://github.com/huangwl18/modular-rl), [Amorpheus (Kurin et al., ICLR 2021)](https://github.com/yobibyte/amorpheus) and [SWAT (Hong et al., ICLR 2022)](https://github.com/sunghoonhong/SWAT) repository.
+The RL code is based on this [open-source implementation](https://github.com/x35f/unstable_baselines) and the morphology-agnostic implementation is built on top of [SMP (Huang et al., ICML 2020)](https://github.com/huangwl18/modular-rl), [Amorpheus (Kurin et al., ICLR 2021)](https://github.com/yobibyte/amorpheus) and [SWAT (Hong et al., ICLR 2022)](https://github.com/sunghoonhong/SWAT) repository.

@@ -6,6 +6,8 @@
 
 <sup>1</sup>Department of Computer Science and Technology, Institute for AI, BNRist Center, Tsinghua University, <sup>2</sup>THU-Bosch JCML Center, <sup>3</sup>Gaoling School of Artificial Intelligence, Renmin University of China, <sup>4</sup>Beijing Key Laboratory of Big Data Management and Analysis Methods<br/>
 
+<img src="images/teaser.gif" width="700">
+
 This is a PyTorch-based implementation of our [Subequivariant Graph Reinforcement Learning](https://alpc91.github.io/SGRL/). In this work, we introduce a new morphology-agnostic RL benchmark that extends the widely adopted 2D-Planar setting to 3D-SGRL, permitting significantly larger exploring space of the agents with arbitrary initial location and target direction. To learn a policy in this massive search space, we design SET, a novel model that preserves geometric symmetry by construction. Experimental results strongly support the necessity of encoding symmetry into the policy network and its wide applicability towards learning to navigate in various 3D environments. 
 
 If you find this work useful in your research, please cite using the following BibTeX:

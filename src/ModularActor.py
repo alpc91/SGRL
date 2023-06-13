@@ -189,6 +189,7 @@ class ActorGraphPolicy(nn.Module):
 
     def forward(self, state, mode="train"):
         self.clear_buffer()
+        self.batch_size = state.shape[0]
         if mode == "inference":
             temp = self.batch_size
             self.batch_size = 1

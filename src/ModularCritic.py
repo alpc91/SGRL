@@ -218,6 +218,7 @@ class CriticGraphPolicy(nn.Module):
 
     def forward(self, state, action):
         self.clear_buffer()
+        self.batch_size = state.shape[0]
         if not self.disable_fold:
             self.fold = Fold()
             self.fold.cuda()

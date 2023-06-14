@@ -246,6 +246,7 @@ class ActorGraphPolicy(nn.Module):
         if mode == "inference":
             self.batch_size = temp
 
+        self.action = self.action.permute(0, 2, 1)
         self.action = self.action.contiguous().view(self.action.shape[0], -1)
         return self.action
 

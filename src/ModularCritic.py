@@ -341,7 +341,7 @@ class CriticGraphPolicy(nn.Module):
             self.x1 = torch.transpose(self.x1, 0, 1)
             self.fold = None
         else:
-            self.x1 = torch.stack(self.x1, dim=-1)  # (bs,num_limbs,1)
+            self.x1 = torch.stack(self.x1, dim=-1)  # (bs,1,num_limbs)
 
         self.x1 =  torch.sum(self.x1, dim=-1)
         self.x1 = self.x1.contiguous().view(self.x1.shape[0], -1)
